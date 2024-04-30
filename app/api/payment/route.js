@@ -61,7 +61,10 @@ export async function PUT(req) {
         success: true,
         updatedData,
         transactionData: addInPayment,
+        teamData: updatedData,
       });
+    } else {
+      return NextResponse.json({ success: false, message: "Team not full" });
     }
     return NextResponse.json({ message: "Team not full!" }, { status: 500 });
   } catch (error) {

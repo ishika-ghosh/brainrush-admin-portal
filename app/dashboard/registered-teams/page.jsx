@@ -5,7 +5,7 @@ import Loader from "@components/Loader";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-function Teams() {
+function RegisteredTeams() {
   const router = useRouter();
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -14,33 +14,33 @@ function Teams() {
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(0);
   const [count, setCount] = useState(0);
-  useEffect(() => {
-    const handler = async () => {
-      try {
-        const { data } = await axios.get(
-          `/api/teams?search=${search}&filter=${filter}&page=${pageNum}`
-        );
-        console.log("am all time useEffect" + data.teams);
-        setTeams(data.teams);
-        setCount(data.count);
-      } catch (error) {
-        console.log(error);
-        router.push("/dashboard");
-      }
-    };
-    handler();
-  }, [filter, search, pageNum]);
+  //   useEffect(() => {
+  //     const handler = async () => {
+  //       try {
+  //         const { data } = await axios.get(
+  //           `/api/teams?search=${search}&filter=${filter}&page=${pageNum}`
+  //         );
+  //         console.log("am all time useEffect" + data.teams);
+  //         setTeams(data.teams);
+  //         setCount(data.count);
+  //       } catch (error) {
+  //         console.log(error);
+  //         router.push("/dashboard");
+  //       }
+  //     };
+  //     handler();
+  //   }, [filter, search, pageNum]);
 
   useEffect(() => {
     const getData = async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get(`/api/teams`);
+        const { data } = await axios.get(`/api/teams/all`);
         setLoading(false);
         setTeams(data.teams);
-        setLimit(data.limit);
-        setCount(data.count);
-        console.log("am first time useEffect" + data.teams);
+        // setLimit(data.limit);
+        // setCount(data.count);
+        console.log("am first time useEffect", data.teams);
       } catch (error) {
         console.log(error);
       }
@@ -78,7 +78,7 @@ function Teams() {
                 </div>
               </div>
             </div>
-            <div className="flex items-center ml-auto space-x-2 sm:space-x-3 mr-5">
+            {/* <div className="flex items-center ml-auto space-x-2 sm:space-x-3 mr-5">
               <div className="flex items-center ml-auto space-x-2">
                 <input
                   type="radio"
@@ -117,7 +117,7 @@ function Teams() {
                 />{" "}
                 <div>Final</div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -152,36 +152,31 @@ function Teams() {
                     >
                       Team Member
                     </th>
-                    <th
-                      scope="col"
-                      className="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"
-                    >
-                      Entry time
-                    </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700 cursor-pointer">
+                <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
                   {teams?.map((team) => (
                     <tr
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 "
+                      className="hover:bg-gray-100 dark:hover:bg-gray-700"
                       key={team._id}
                       onClick={() => {
-                        router.push(`/dashboard/teams/${team._id}`);
-                        // router.push(`/dashboard/teams/${team._id}`);
+                        router.push(`/dashboard/registered-teams/${team._id}`);
                       }}
                     >
                       <td className="flex items-center p-4  space-x-6 whitespace-nowrap">
                         <div className="flex -space-x-4">
+                          {team.teamMember && (
+                            <Image
+                              className="border-2 border-white rounded-full dark:border-gray-800"
+                              src={team?.teamMember?.image}
+                              width="35"
+                              height="35"
+                              alt=""
+                            />
+                          )}
                           <Image
                             className="border-2 border-white rounded-full dark:border-gray-800"
-                            src={team.team.teamMember.image}
-                            width="35"
-                            height="35"
-                            alt=""
-                          />
-                          <Image
-                            className="border-2 border-white rounded-full dark:border-gray-800"
-                            src={team.team.leader.image}
+                            src={team.leader.image}
                             width="35"
                             height="35"
                             alt=""
@@ -191,33 +186,32 @@ function Teams() {
                       <td className="max-w-sm p-4 overflow-hidden text-base font-normal text-gray-500 truncate xl:max-w-xs dark:text-gray-400">
                         <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
                           <div className="text-base font-semibold text-gray-900 dark:text-white">
-                            {team.team.teamName}
+                            {team.teamName}
                           </div>
                         </div>
                       </td>
                       <td className="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         <div className="text-sm font-normal text-gray-800 dark:text-gray-400">
                           <div className="font-medium dark:text-white">
-                            <div>{team.team.leader.name}</div>
+                            <div>{team.leader.name}</div>
                             <div className="text-sm text-gray-500 dark:text-gray-400">
-                              {team.team.leader.email}
+                              {team.leader.email}
                             </div>
                           </div>
                         </div>
                       </td>
                       <td className="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         <div className="text-sm font-normal text-gray-800 dark:text-gray-400">
-                          <div className="font-medium dark:text-white">
-                            <div>{team.team.teamMember.name}</div>
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                              {team.team.teamMember.email}
+                          {team?.teamMember ? (
+                            <div className="font-medium dark:text-white">
+                              <div>{team?.teamMember?.name}</div>
+                              <div className="text-sm text-gray-500 dark:text-gray-400">
+                                {team?.teamMember?.email}
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        <div className="text-sm font-normal text-gray-800 dark:text-gray-400">
-                          {team.createdAt.split("T")[1].split(".")[0]}
+                          ) : (
+                            <span>Not Joined</span>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -304,4 +298,4 @@ function Teams() {
   );
 }
 
-export default Teams;
+export default RegisteredTeams;
