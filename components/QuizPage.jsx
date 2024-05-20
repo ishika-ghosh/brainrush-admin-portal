@@ -3,6 +3,8 @@ import React from "react";
 import Loader from "@components/Loader";
 import axios from "axios";
 import { useState } from "react";
+import QuestionForm from "./QuestionForm";
+import Link from "next/link";
 
 const QuizPage = ({ initialData, onSave, onClose }) => {
   const [loading, setLoading] = useState(false);
@@ -94,189 +96,66 @@ const QuizPage = ({ initialData, onSave, onClose }) => {
       }
     }
   };
-
+  console.log(initialData);
   return loading ? (
     <Loader />
   ) : (
-    <div className="fixed inset-0 flex justify-center overflow-x-hidden z-50 bg-white p-10 rounded-lg  overflow-y-auto">
-      <div className="relative bg-white  w-full h-full rounded-lg ">
-        <div className="flex fixed right-10 justify-end p-2">
-          <button
-            type="button"
-            className="text-gray-900  bg-gray-200 hover:bg-gray-300 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
-            data-modal-toggle="delete-user-modal"
-            onClick={onClose}
-          >
-            <svg
-              className="w-7 h-7"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-          </button>
+    <>
+      <div className="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5">
+        <div className="w-full mb-1">
+          <div className="mb-4">
+            <h1 className="text-xl font-semibold text-gray-900 sm:text-2xl">
+              {initialData.message.split(' ').slice(0, -1).join(' ')}
+            </h1>
+          </div>
         </div>
-        <form
-          onSubmit={async () => {
-            if (initialData) await handleSave(initialData._id);
-            else await handleSave();
-            onSave();
+        <button
+          onClick={() => {
+            setSingleQuizData(null);
+            setIsModalOpen(true);
           }}
+          className="px-4 mr-24 w-fit py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
-          <input
-            type="text"
-            placeholder="Quiz Title"
-            value={formData.title}
-            onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
-            }
-            className="w-full font-bold text-7xl border-0 rounded-lg focus:ring-0 focus:outline-none block"
-          />
-          {formData.questions.map((question, index) => (
-            <div key={index}>
-              <div className="flex flex-col mt-8 mb-4 justify-between">
-                <textarea
-                  type="text"
-                  placeholder="Question Content"
-                  value={question.content}
-                  onChange={(e) =>
-                    handleChange(index, "content", e.target.value)
-                  }
-                  className="w-full font-semibold text-2xl border-0 rounded-lg focus:outline-none block"
-                />
-              </div>
-              {question.q_type !== "NAT" && (
+          Add Question
+        </button>
+      </div>
+      <div>
+        {initialData?.questions?.map((question, index) => (
+          <div
+            key={index}
+            className="p-2 mb-2 bg-white block sm:flex items-center justify-between border rounded-md mr-24 border-gray-800 lg:mt-1.5"
+          >
+            <div className="w-full mb-1">
+              <div className="flex items-center gap-2 justify-between">
                 <div>
-                  {question.options.map((option, optionIndex) => (
-                    <div key={optionIndex} className="mb-2">
-                      <div className="flex justify-between bg-slate-400 rounded-md p-5">
-                        <div className="flex justify-start gap-4 items-center">
-                          {question.q_type === "MCQ" ? (
-                            <input
-                              name={question._id}
-                              type="radio"
-                              checked={option.isCorrect}
-                              onChange={(e) =>
-                                handleOptionChange(
-                                  index,
-                                  optionIndex,
-                                  "isCorrect",
-                                  e.target.checked
-                                )
-                              }
-                              className="appearance-none w-6 h-6 rounded-full border border-gray-900 checked:bg-green-600 focus:outline-none"
-                            />
-                          ) : (
-                            <input
-                              type="checkbox"
-                              checked={option.isCorrect}
-                              onChange={(e) =>
-                                handleOptionChange(
-                                  index,
-                                  optionIndex,
-                                  "isCorrect",
-                                  e.target.checked
-                                )
-                              }
-                              className="appearance-none w-6 h-6 rounded-full border border-gray-900 checked:bg-green-600 focus:outline-none"
-                            />
-                          )}
-                          <input
-                            type="text"
-                            name={question._id}
-                            placeholder={`Option ${optionIndex + 1}`}
-                            value={option.text}
-                            onChange={(e) =>
-                              handleOptionChange(
-                                index,
-                                optionIndex,
-                                "text",
-                                e.target.value
-                              )
-                            }
-                            className="w-full bg-slate-400 font-semibold text-2xl border-0 rounded-lg focus:ring-0 focus:outline-none block"
-                          />
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveOption(index, optionIndex)}
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="w-6 h-6"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                  <h1 className="text-xl font-semibold text-gray-900 sm:text-2xl ">
+                    {question.content.substring(0, 60)}{question.content.length < 60 ? "" : "..."}
+                  </h1>
+                  <h3>Type: {question.q_type}</h3>
+                  <h3>Explanation: {question.explanation.substring(0, 60)}{question.explanation.length < 60 ? "" : "..."}</h3>
+                </div>
+                <div className="flex items-center gap-2 justify-end">
+                  <Link href={`${initialData?.id}/new`}>
+                    <button
+                      className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    >
+                      Edit
+                    </button>
+                  </Link>
                   <button
-                    type="button"
-                    onClick={() => handleAddOption(index)}
-                    className="w-full font-bold bg-red-300 rounded-md p-2"
+                    // onClick={handleDelete(quiz._id)}
+                    className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                   >
-                    + Add Option
+                    Delete
                   </button>
                 </div>
-              )}
-              <div className="flex mt-2 w-full font-bold rounded-md p-2 bg-gray-300 justify-evenly gap-4">
-                <label
-                  onClick={() => handleChangeQType(index, "q_type", "MCQ")}
-                  className={`cursor-pointer ${
-                    question.q_type === "MCQ" && "underline"
-                  }`}
-                >
-                  <span>Single correct answer</span>
-                </label>
-                <label
-                  onClick={() => handleChangeQType(index, "q_type", "MSQ")}
-                  className={`cursor-pointer ${
-                    question.q_type === "MSQ" && "underline"
-                  }`}
-                >
-                  <span>Multiple correct answers</span>
-                </label>
               </div>
-              <button
-                type="button"
-                onClick={() => handleRemoveQuestion(index)}
-                className="w-full mt-2 font-bold text-white bg-red-600 rounded-md p-2"
-              >
-                Delete Question
-              </button>
             </div>
-          ))}
-          <button
-            type="button"
-            onClick={handleAddQuestion}
-            className="w-full mt-8 font-bold bg-orange-300 rounded-md p-2"
-          >
-            + Add Question
-          </button>
-          <button
-            type="submit"
-            className="w-full my-4 font-bold bg-green-400 rounded-md p-2"
-          >
-            Submit
-          </button>
-        </form>
-      </div>
-    </div>
+          </div>
+        ))}
+      </div >
+    </>
+    // <QuestionForm initialData={null} onSubmit={() => { }} mode="create" />
   );
 };
 

@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import Loader from "@components/Loader";
 import QuizPage from "@components/QuizPage";
+import Link from "next/link";
 
 function Teams() {
   //   const router = useRouter();
@@ -78,23 +79,24 @@ function Teams() {
         {quizzes.map((quiz, index) => (
           <div
             key={index}
-            className="p-2 bg-white block sm:flex items-center justify-between border rounded-md mr-24 border-gray-800 lg:mt-1.5 "
+            className="p-2 mb-2 bg-white block sm:flex items-center justify-between border rounded-md mr-24 border-gray-800 lg:mt-1.5"
           >
             <div className="w-full mb-1">
               <div className="flex items-center gap-2 justify-between">
-                <h1 className="text-xl font-semibold text-gray-900 sm:text-2xl ">
-                  {quiz.title}
-                </h1>
+                <div>
+                  <h1 className="text-xl font-semibold text-gray-900 sm:text-2xl ">
+                    {quiz.title}
+                  </h1>
+                  <h3>Number of Questions: {quiz.numberOfQuestions}</h3>
+                </div>
                 <div className="flex items-center gap-2 justify-end">
-                  <button
-                    onClick={() => {
-                      setSingleQuizData(quiz);
-                      setIsModalOpen(true);
-                    }}
-                    className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  >
-                    Edit
-                  </button>
+                  <Link href={`quiz/${quiz._id}`}>
+                    <button
+                      className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    >
+                      Edit
+                    </button>
+                  </Link>
                   <button
                     onClick={handleDelete(quiz._id)}
                     className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
@@ -106,7 +108,7 @@ function Teams() {
             </div>
           </div>
         ))}
-      </div>
+      </div >
     </>
   );
 }

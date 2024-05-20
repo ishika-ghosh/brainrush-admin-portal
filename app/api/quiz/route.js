@@ -2,7 +2,7 @@ import Admin from "@models/admin";
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@utils/db";
 import { getDetails } from "@utils/getDetails";
-import Quiz from "@models/quiz";
+import QuizTitle from "@models/quizTitle";
 
 export async function GET(request) {
   try {
@@ -16,14 +16,29 @@ export async function GET(request) {
     }
     const adminId = admin?.id;
     const adminDetails = await Admin.findById(adminId);
-    //if not a super admin then can not allow then to change the details
+    // if not a super admin then can not allow then to change the details
     if (!adminDetails.isSuperAdmin) {
       return NextResponse.json({
         status: 400,
         message: "Only super admin can change this details",
       });
     }
-    const quizzes = await Quiz.find({});
+    const quizzes = await QuizTitle.aggregate([
+      {
+        $lookup: {
+          from: "questions", // collection name in MongoDB is usually the lowercase, plural form of the model name
+          localField: "_id",
+          foreignField: "title",
+          as: "questions",
+        },
+      },
+      {
+        $project: {
+          title: 1,
+          numberOfQuestions: { $size: "$questions" },
+        },
+      },
+    ]);
     return NextResponse.json({
       status: 200,
       message: "All Quizzes",
@@ -59,9 +74,9 @@ export async function POST(request) {
     }
 
     const reqBody = await request.json();
-    const { title, questions } = reqBody;
+    const { title } = reqBody;
 
-    const quiz = new Quiz({ title, questions });
+    const quiz = new QuizTitle({ title });
     await quiz.save();
     return NextResponse.json({
       status: 201,
