@@ -19,7 +19,7 @@ export async function POST(req) {
     if (!decoded) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
-    const admin = await Admin.findById(decoded?.id);
+
     if (!admin.isSuperAdmin) {
       return NextResponse.json(
         {
