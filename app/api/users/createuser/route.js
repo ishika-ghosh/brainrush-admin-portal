@@ -16,7 +16,7 @@ export async function POST(req) {
 
     const token = await getToken({ req });
     const admin = await Admin.findOne({ username: token?.username });
-    if (!decoded) {
+    if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
 
