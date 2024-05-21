@@ -20,7 +20,7 @@ function UserForm({
             width={8}
             height={8}
           />
-          Kodikas Admin Portal
+          BrainRush Admin Portal
         </div>
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -67,15 +67,6 @@ function UserForm({
                 </div>
                 {createUser && (
                   <div className="flex items-start">
-                    <div className="flex items-center h-5">
-                      <input
-                        id="terms"
-                        aria-describedby="terms"
-                        type="checkbox"
-                        className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                        onChange={handleCheckBox}
-                      />
-                    </div>
                     <div className="ml-3 text-sm">
                       <label
                         htmlFor="terms"
@@ -83,6 +74,17 @@ function UserForm({
                       >
                         Make the user Super admin
                       </label>
+                    </div>
+                    <div className="flex items-center h-5">
+                      <select
+                        name="isSuperAdmin"
+                        id="cars"
+                        className="ml-3 p-3 rounded-xl"
+                        onChange={handleChange}
+                      >
+                        <option value={false}>No</option>
+                        <option value={true}>Yes</option>
+                      </select>
                     </div>
                   </div>
                 )}

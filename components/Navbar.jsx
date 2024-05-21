@@ -17,7 +17,7 @@ function Navbar() {
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <a href="/dashboard" className="flex items-center">
           <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-            Kodikas 2023
+            BrainRush 2024
           </span>
         </a>
         {/* <div className="flex items-center md:order-2">

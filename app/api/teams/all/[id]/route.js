@@ -22,7 +22,7 @@ export async function GET(req, { params }) {
 
     const details = await Team.findById(id)
       .populate("leader")
-      .populate("teamMember");
+      .populate("members");
 
     return NextResponse.json(details);
   } catch (error) {

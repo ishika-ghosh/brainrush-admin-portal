@@ -4,11 +4,16 @@ import Admin from "@models/admin";
 import bcryptjs from "bcryptjs";
 import { getDetails } from "@utils/getDetails";
 
+//create a new admin
 export async function POST(req) {
   try {
     await connectToDatabase();
+
     const reqBody = await req.json();
     const { username, password, isSuperAdmin } = reqBody;
+    console.log(isSuperAdmin);
+    console.log(reqBody);
+
     const decoded = getDetails(req);
     if (!decoded) {
       return NextResponse.json({ error: "Not valid user", success: false });
@@ -41,9 +46,9 @@ export async function POST(req) {
     return NextResponse.json({ status: 200, savedAdmin });
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { message: "Internal Server Error" },
-      { status: 500 }
-    );
+    // return NextResponse.json(
+    //   { message: "Internal Server Error" },
+    //   { status: 500 }
+    // );
   }
 }

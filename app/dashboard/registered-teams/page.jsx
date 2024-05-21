@@ -165,15 +165,6 @@ function RegisteredTeams() {
                     >
                       <td className="flex items-center p-4  space-x-6 whitespace-nowrap">
                         <div className="flex -space-x-4">
-                          {team.teamMember && (
-                            <Image
-                              className="border-2 border-white rounded-full dark:border-gray-800"
-                              src={team?.teamMember?.image}
-                              width="35"
-                              height="35"
-                              alt=""
-                            />
-                          )}
                           <Image
                             className="border-2 border-white rounded-full dark:border-gray-800"
                             src={team.leader.image}
@@ -202,15 +193,10 @@ function RegisteredTeams() {
                       </td>
                       <td className="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         <div className="text-sm font-normal text-gray-800 dark:text-gray-400">
-                          {team?.teamMember ? (
-                            <div className="font-medium dark:text-white">
-                              <div>{team?.teamMember?.name}</div>
-                              <div className="text-sm text-gray-500 dark:text-gray-400">
-                                {team?.teamMember?.email}
-                              </div>
-                            </div>
+                          {team?.members?.length === 2 ? (
+                            <span>Team Completed</span>
                           ) : (
-                            <span>Not Joined</span>
+                            <span>Not Completed</span>
                           )}
                         </div>
                       </td>
@@ -221,7 +207,7 @@ function RegisteredTeams() {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center fixed mb-10 left-1/2 bottom-0">
+        <div className="flex flex-col items-center justify-center mb-10 left-1/2 bottom-0">
           <span className="text-sm text-gray-700 dark:text-gray-400">
             Showing{" "}
             <span className="font-semibold text-gray-900 dark:text-white">

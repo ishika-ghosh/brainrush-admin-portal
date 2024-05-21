@@ -38,16 +38,25 @@ function CreateUser() {
       setUserData({ ...userData, isSuperAdmin: checked });
       console.log(userData);
       setLoading(true);
-      const { data } = await axios.post("/api/users/createuser", userData);
-      console.log(data);
-      alert("user created successfully");
+      try {
+        const { data } = await axios.post("/api/users/createuser", userData);
+        console.log(data);
+        alert("user created successfully");
+      } catch (error) {
+        console.log(error);
+        alert("something went wrong");
+      }
       setLoading(false);
     } catch (error) {
       console.log(error);
     }
   };
   const handleCheckBox = () => {
-    setChecked(!checked);
+    if (checked) {
+      setChecked(false);
+    } else {
+      setChecked(true);
+    }
   };
   return (
     <UserForm

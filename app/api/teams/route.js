@@ -49,7 +49,7 @@ export async function GET(request) {
       .limit(limit)
       .populate({
         path: "team",
-        populate: [{ path: "teamMember" }, { path: "leader" }],
+        populate: [{ path: "members" }, { path: "leader" }],
       });
     console.log(eventsOfAllTeams);
     return NextResponse.json({

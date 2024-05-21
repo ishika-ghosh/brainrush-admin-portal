@@ -16,7 +16,7 @@ export async function GET(req) {
     await connectToDatabase();
     let events = await EventDay.findOne({
       team: teamId,
-    }).populate({ path: "team", populate: ["leader", "teamMember"] });
+    }).populate({ path: "team", populate: ["leader", "members"] });
     return NextResponse.json(events);
   } catch (error) {
     console.log(error);

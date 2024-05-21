@@ -136,28 +136,37 @@ function TeamDetails({ params }) {
           </div>
           <div className="mb-6 lg:mb-0">
             <div className="relative block rounded-lg p-6 bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-              <div className="flex-row items-center lg:flex">
-                <div className="w-full shrink-0 grow-0 basis-auto lg:w-5/12 lg:pr-6">
-                  <img
-                    src={details?.team.teamMember.image}
-                    alt="Trendy Pants and Shoes"
-                    className="mb-6 w-full rounded-md lg:mb-0"
-                  />
-                </div>
-                <div className="w-full shrink-0 grow-0 basis-auto lg:w-7/12">
-                  <h5 className="mb-2 text-lg font-bold">
-                    {details?.team.teamMember.name}
-                  </h5>
-                  <p className="mb-4 text-neutral-500 dark:text-neutral-300">
-                    {details?.team.teamMember.email}
-                  </p>
-                  <p className="mb-4 text-neutral-500 dark:text-neutral-300">
-                    {details?.team.teamMember.department}{" "}
-                    {details?.team.teamMember.year}
-                  </p>
-                  <ul className="mx-auto flex list-inside justify-center lg:justify-start"></ul>
-                </div>
-              </div>
+              {details?.members.length > 0 ? (
+                details?.members.map((member) => (
+                  <div
+                    className="flex-row items-center lg:flex mb-3"
+                    key={member?._id}
+                  >
+                    <div className="w-full shrink-0 grow-0 basis-auto lg:w-5/12 lg:pr-6">
+                      <img
+                        src={member?.image}
+                        alt="Trendy Pants and Shoes"
+                        className="mb-6 w-full rounded-md lg:mb-0"
+                      />
+                    </div>
+                    <div className="w-full shrink-0 grow-0 basis-auto lg:w-7/12">
+                      <h5 className="mb-2 text-lg font-bold">{member?.name}</h5>
+                      <p className="mb-4 text-neutral-500 dark:text-neutral-300">
+                        {member?.email}
+                      </p>
+                      <p className="mb-4 text-neutral-500 dark:text-neutral-300">
+                        {member.department} {member.year}
+                      </p>
+                      <p className="mb-4 text-neutral-500 dark:text-neutral-300">
+                        {member?.phoneNumber}
+                      </p>
+                      <ul className="mx-auto flex list-inside justify-center lg:justify-start"></ul>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <span>Team Not Completed</span>
+              )}
             </div>
           </div>
         </div>

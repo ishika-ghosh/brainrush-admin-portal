@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Kodikas Admin Portal",
+  title: "Brainrush Admin Portal",
 };
 
 export default function RootLayout({ children }) {

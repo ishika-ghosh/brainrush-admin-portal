@@ -14,7 +14,7 @@ export async function GET(req) {
     console.log(teamId);
     let team = await Team.findOne({
       _id: searchParams.get("teamid"),
-    }).populate(["leader", "teamMember"]);
+    }).populate(["leader", "members"]);
     return NextResponse.json({
       success: true,
       message: `${team.teamName} Details`,
@@ -37,26 +37,29 @@ export async function PUT(req) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
     const teamData = await Team.findById(teamId);
-    if (teamData.teamMemberConfirmation && !teamData.payment) {
-      const updatedData = await Team.updateOne(
-        { team: teamId },
+    if (teamData.members.length === 2 && !teamData.payment) {
+      const updatedData = await Team.findByIdAndUpdate(
+        teamId,
         {
           payment: paymentStatus,
-        }
-      );
-      console.log(updatedData);
+        },
+        { new: true }
+      )
+        .populate("leader")
+        .populate("members");
+
       if (!updatedData) {
         return NextResponse.json(
           { message: "Internal Server Error" },
           { status: 500 }
         );
       }
-      console.log(updatedData);
+
       const addInPayment = await Payment.create({
         team: teamId,
         admin: admin?.id,
       });
-      console.log("updatedData: " + updatedData);
+
       return NextResponse.json({
         success: true,
         updatedData,

@@ -30,7 +30,7 @@ export async function GET(req, { params }) {
 
     const details = await EventDay.findById(id).populate({
       path: "team",
-      populate: [{ path: "teamMember" }, { path: "leader" }],
+      populate: [{ path: "members" }, { path: "leader" }],
     });
 
     return NextResponse.json(details);
@@ -85,7 +85,7 @@ export async function PUT(req, { params }) {
       new: true,
     }).populate({
       path: "team",
-      populate: [{ path: "teamMember" }, { path: "leader" }],
+      populate: [{ path: "members" }, { path: "leader" }],
     });
     let round =
       (body?.first && "First") ||

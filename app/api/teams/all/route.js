@@ -11,7 +11,7 @@ export async function GET(request) {
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
-    const teams = await Team.find({}).populate("leader").populate("teamMember");
+    const teams = await Team.find({}).populate("leader").populate("members");
     return NextResponse.json({
       success: true,
       teams: teams,

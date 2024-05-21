@@ -99,9 +99,9 @@ function TeamDetails({ params }) {
           </u>
         </h2>
 
-        <div className="grid gap-6 md:grid-cols-3 xl:gap-x-12">
+        <div className="grid gap-6 md:grid-cols-2 xl:gap-x-12">
           <div className="mb-6 lg:mb-0">
-            <div className="relative block rounded-lg p-6 bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+            <div className="relative block rounded-lg p-6 bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 w-auto">
               <div className="flex-row items-center lg:flex">
                 <div className="w-full shrink-0 grow-0 basis-auto lg:w-5/12 lg:pr-6">
                   <img
@@ -133,34 +133,36 @@ function TeamDetails({ params }) {
           </div>
           <div className="mb-6 lg:mb-0">
             <div className="relative block rounded-lg p-6 bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-              {details?.teamMemberConfirmation ? (
-                <div className="flex-row items-center lg:flex">
-                  <div className="w-full shrink-0 grow-0 basis-auto lg:w-5/12 lg:pr-6">
-                    <img
-                      src={details?.teamMember?.image}
-                      alt="Trendy Pants and Shoes"
-                      className="mb-6 w-full rounded-md lg:mb-0"
-                    />
+              {details?.members.length > 0 ? (
+                details?.members.map((member) => (
+                  <div
+                    className="flex-row items-center lg:flex mb-3"
+                    key={member?._id}
+                  >
+                    <div className="w-full shrink-0 grow-0 basis-auto lg:w-5/12 lg:pr-6">
+                      <img
+                        src={member?.image}
+                        alt="Trendy Pants and Shoes"
+                        className="mb-6 w-full rounded-md lg:mb-0"
+                      />
+                    </div>
+                    <div className="w-full shrink-0 grow-0 basis-auto lg:w-7/12">
+                      <h5 className="mb-2 text-lg font-bold">{member?.name}</h5>
+                      <p className="mb-4 text-neutral-500 dark:text-neutral-300">
+                        {member?.email}
+                      </p>
+                      <p className="mb-4 text-neutral-500 dark:text-neutral-300">
+                        {member.department} {member.year}
+                      </p>
+                      <p className="mb-4 text-neutral-500 dark:text-neutral-300">
+                        {member?.phoneNumber}
+                      </p>
+                      <ul className="mx-auto flex list-inside justify-center lg:justify-start"></ul>
+                    </div>
                   </div>
-                  <div className="w-full shrink-0 grow-0 basis-auto lg:w-7/12">
-                    <h5 className="mb-2 text-lg font-bold">
-                      {details?.teamMember?.name}
-                    </h5>
-                    <p className="mb-4 text-neutral-500 dark:text-neutral-300">
-                      {details?.teamMember?.email}
-                    </p>
-                    <p className="mb-4 text-neutral-500 dark:text-neutral-300">
-                      {details?.teamMember.department}{" "}
-                      {details?.teamMember.year}
-                    </p>
-                    <p className="mb-4 text-neutral-500 dark:text-neutral-300">
-                      {details?.teamMember?.phoneNumber}
-                    </p>
-                    <ul className="mx-auto flex list-inside justify-center lg:justify-start"></ul>
-                  </div>
-                </div>
+                ))
               ) : (
-                <span>Not Joined</span>
+                <span>Team Not Completed</span>
               )}
             </div>
           </div>
@@ -179,24 +181,29 @@ function TeamDetails({ params }) {
             )}
           </p>
           <ul className="my-10 items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-            <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
-              <QualifierInput
-                qualified={details?.payment}
-                isDisabled={
-                  !details?.teamMemberConfirmation ||
-                  !checkTime(timings, "Payment")
-                }
-                isChecked={checkbox[0]}
-                handleChange={() => {
-                  handleChange(
-                    0,
-                    { teamId: details?._id, paymentStatus: !details?.payment },
-                    "Payment"
-                  );
-                }}
-                cardTitle="Payment"
-              />
-            </li>
+            {details?.members.length === 2 && (
+              <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
+                <QualifierInput
+                  qualified={details?.payment}
+                  isDisabled={
+                    !details?.members.length === 2 ||
+                    !checkTime(timings, "Payment")
+                  }
+                  isChecked={checkbox[0]}
+                  handleChange={() => {
+                    handleChange(
+                      0,
+                      {
+                        teamId: details?._id,
+                        paymentStatus: !details?.payment,
+                      },
+                      "Payment"
+                    );
+                  }}
+                  cardTitle="Payment"
+                />
+              </li>
+            )}
             {details?.payment && (
               <li className="w-full dark:border-gray-600">
                 <QualifierInput
