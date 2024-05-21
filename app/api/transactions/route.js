@@ -3,6 +3,7 @@ import Admin from "@models/admin";
 import { connectToDatabase } from "@utils/db";
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
+export const dynamic = "force-dynamic";
 export async function GET(req) {
   try {
     await connectToDatabase();

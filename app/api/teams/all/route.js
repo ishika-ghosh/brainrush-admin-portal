@@ -4,6 +4,7 @@ import { connectToDatabase } from "@utils/db";
 import { getToken } from "next-auth/jwt";
 import Team from "@models/team";
 import Admin from "@models/admin";
+export const dynamic = "force-dynamic";
 
 export async function GET(request) {
   await connectToDatabase();
