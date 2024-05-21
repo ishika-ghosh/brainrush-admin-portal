@@ -4,14 +4,15 @@ import Admin from "@models/admin";
 import Payment from "@models/payment";
 import { connectToDatabase } from "@utils/db";
 import { NextResponse } from "next/server";
-import { getDetails } from "@utils/getDetails";
+import { getToken } from "next-auth/jwt";
 import EventDay from "@models/eventDay";
 
 export async function PUT(req) {
   try {
     await connectToDatabase();
     const { teamId, lunchStatus } = await req.json();
-    const admin = getDetails(req);
+    const token = await getToken({ req });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
@@ -38,7 +39,8 @@ export async function POST(req) {
   try {
     await connectToDatabase();
     const { teamId, entryStatus } = await req.json();
-    const admin = getDetails(req);
+    const token = await getToken({ req });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }

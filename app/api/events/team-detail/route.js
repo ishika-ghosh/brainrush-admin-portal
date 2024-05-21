@@ -5,7 +5,6 @@ import Admin from "@models/admin";
 import Payment from "@models/payment";
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@utils/db";
-import { getDetails } from "@utils/getDetails";
 import EventDay from "@models/eventDay";
 
 export async function GET(req) {

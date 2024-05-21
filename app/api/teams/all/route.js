@@ -1,13 +1,15 @@
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@utils/db";
-import { getDetails } from "@utils/getDetails";
+import { getToken } from "next-auth/jwt";
 import Team from "@models/team";
+import Admin from "@models/admin";
 
 export async function GET(request) {
   await connectToDatabase();
   try {
-    const admin = getDetails(request);
+    const token = await getToken({ req: request });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }

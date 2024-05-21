@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@utils/db";
 import Admin from "@models/admin";
 import bcryptjs from "bcryptjs";
-import { getDetails } from "@utils/getDetails";
+import { getToken } from "next-auth/jwt";
 
 //create a new admin
 export async function POST(req) {
@@ -14,7 +14,8 @@ export async function POST(req) {
     console.log(isSuperAdmin);
     console.log(reqBody);
 
-    const decoded = getDetails(req);
+    const token = await getToken({ req });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!decoded) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }

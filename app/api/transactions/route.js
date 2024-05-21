@@ -2,11 +2,12 @@ import Payment from "@models/payment";
 import Admin from "@models/admin";
 import { connectToDatabase } from "@utils/db";
 import { NextResponse } from "next/server";
-import { getDetails } from "@utils/getDetails";
+import { getToken } from "next-auth/jwt";
 export async function GET(req) {
   try {
     await connectToDatabase();
-    const admin = getDetails(req);
+    const token = await getToken({ req });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json(
         { message: "Not a valid user" },
