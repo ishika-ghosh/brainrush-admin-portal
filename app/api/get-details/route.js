@@ -4,10 +4,22 @@ import Team from "@models/team";
 import User from "@models/user";
 import Payment from "@models/payment";
 import EventDay from "@models/eventDay";
+import Admin from "@models/admin";
+import { getToken } from "next-auth/jwt";
 
-export async function GET() {
+export const dynamic = "force-dynamic";
+
+export async function GET(req) {
   try {
     await connectToDatabase();
+    const token = await getToken({ req });
+    // console.log(token.username);
+    const admin = await Admin.findOne({ username: token?.username }).select(
+      "-password"
+    );
+    if (!admin) {
+      return NextResponse.json({ error: "Not valid user", success: false });
+    }
     const today = new Date().toDateString();
     const tomorrow = new Date().setDate(new Date().getDate() + 1);
     const teams = await Team.count({});
@@ -28,6 +40,7 @@ export async function GET() {
       todaysTransactions: todaysTransactions,
       teamsAttended: teamsAttended,
       teamsWithPayment: teamsWithPayment,
+      user: admin,
     });
   } catch (error) {
     console.error("Error ", error);
