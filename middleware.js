@@ -31,6 +31,7 @@ export async function middleware(req) {
 export const config = {
   matcher: [
     "/",
+    "/api/get-details",
     "/api/event-timings",
     "/api/event-timings/(.*)",
     "/api/users/createuser",

@@ -5,14 +5,22 @@ import { useState, useEffect } from "react";
 function page() {
   const [details, setDetails] = useState(null);
   const [loading, setLoading] = useState(false);
-  const getAllDetails = async () => {
-    setLoading(true);
-    const { data } = await axios.get("/api/get-details");
-    console.log(data);
-    setDetails(data);
-    setLoading(false);
-  };
+
   useEffect(() => {
+    const getAllDetails = async () => {
+      setLoading(true);
+      try {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/get-details`
+        );
+        console.log(data);
+        setDetails(data);
+      } catch (error) {
+        console.log(error);
+      }
+
+      setLoading(false);
+    };
     getAllDetails();
   }, []);
   return loading ? (
@@ -42,7 +50,9 @@ function page() {
             </dd>
           </div>
           <div className="flex flex-col items-center justify-center">
-            <dt className="mb-2 text-3xl font-extrabold">{details?.teamsWithPayment}</dt>
+            <dt className="mb-2 text-3xl font-extrabold">
+              {details?.teamsWithPayment}
+            </dt>
             <dd className="text-center text-gray-500 dark:text-gray-400">
               Teams Completed Payment till date
             </dd>

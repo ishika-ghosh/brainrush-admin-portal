@@ -35,12 +35,13 @@ function RegisteredTeams() {
     const getData = async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get(`/api/teams/all`);
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/teams/all`
+        );
         setLoading(false);
         setTeams(data.teams);
         // setLimit(data.limit);
         // setCount(data.count);
-        console.log("am first time useEffect", data.teams);
       } catch (error) {
         console.log(error);
       }
