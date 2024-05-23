@@ -22,13 +22,13 @@ function TeamDetails({ params }) {
     try {
       setLoading(true);
       const { data } = await axios.get(`/api/teams/${teamId}`);
+      setDetails(data);
+      setCheckbox([data?.first, data?.second, data?.third, data?.lunch]);
       const { data: timeData } = await axios.get("/api/event-times");
       setLoading(false);
       if (!data) {
         router.push("/404");
       }
-      setDetails(data);
-      setCheckbox([data?.first, data?.second, data?.third, data?.lunch]);
       setTimigs(timeData);
     } catch (error) {
       console.log(error);
@@ -104,30 +104,33 @@ function TeamDetails({ params }) {
           </u>
         </h2>
 
-        <div className="grid gap-6 md:grid-cols-3 xl:gap-x-12">
+        <div className="grid gap-6 md:grid-cols-2 xl:gap-x-12">
           <div className="mb-6 lg:mb-0">
-            <div className="relative block rounded-lg p-6 bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+            <div className="relative block rounded-lg p-6 bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 w-auto">
               <div className="flex-row items-center lg:flex">
                 <div className="w-full shrink-0 grow-0 basis-auto lg:w-5/12 lg:pr-6">
                   <img
-                    src={details?.team.leader.image}
+                    src={details?.team?.leader.image}
                     alt="Trendy Pants and Shoes"
                     className="mb-6 w-full rounded-md lg:mb-0"
                   />
                 </div>
                 <div className="w-full shrink-0 grow-0 basis-auto lg:w-7/12">
                   <h5 className="mb-2 text-lg font-bold">
-                    {details?.team.leader.name}
+                    {details?.team?.leader.name}
                     <span className="bg-green-100 text-green-800 text-xs font-medium ml-2 px-2.5 py-0.5 rounded-md dark:bg-gray-700 dark:text-green-400 border border-green-100 dark:border-green-500">
                       Leader
                     </span>
                   </h5>
                   <p className="mb-4 text-neutral-500 dark:text-neutral-300">
-                    {details?.team.leader.email}
+                    {details?.team?.leader.email}
                   </p>
                   <p className="mb-4 text-neutral-500 dark:text-neutral-300">
-                    {details?.team.leader.department}{" "}
-                    {details?.team.leader.year}
+                    {details?.team?.leader.department}{" "}
+                    {details?.team?.leader.year}
+                  </p>
+                  <p className="mb-4 text-neutral-500 dark:text-neutral-300">
+                    {details?.team?.leader?.phoneNumber}
                   </p>
                   <ul className="mx-auto flex list-inside justify-center lg:justify-start"></ul>
                 </div>
@@ -136,8 +139,8 @@ function TeamDetails({ params }) {
           </div>
           <div className="mb-6 lg:mb-0">
             <div className="relative block rounded-lg p-6 bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-              {details?.members.length > 0 ? (
-                details?.members.map((member) => (
+              {details?.team?.members.length > 0 ? (
+                details?.team?.members.map((member) => (
                   <div
                     className="flex-row items-center lg:flex mb-3"
                     key={member?._id}
