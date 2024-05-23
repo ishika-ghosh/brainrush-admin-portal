@@ -15,9 +15,8 @@ export async function GET(req) {
         { status: 403 }
       );
     }
-    const id = admin?.id;
-    const adminData = await Admin.findById(id);
-    if (!adminData.isSuperAdmin) {
+
+    if (!admin?.isSuperAdmin) {
       return NextResponse.json(
         {
           message:

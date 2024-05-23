@@ -20,7 +20,7 @@ export async function POST(req, { params }) {
     }
     const token = await getToken({ req });
     const admin = await Admin.findOne({ username: token?.username });
-    if (!adminData) {
+    if (!admin) {
       return NextResponse.json(
         {
           message: "admin not found",
@@ -28,7 +28,7 @@ export async function POST(req, { params }) {
         { status: 404 }
       );
     }
-    if (!adminData.isSuperAdmin) {
+    if (!admin.isSuperAdmin) {
       return NextResponse.json(
         {
           message: "Only super admins are allowed to update status of a link",
