@@ -10,7 +10,7 @@ import EventDay from "@models/eventDay";
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const teamId = searchParams.get("teamid");
-  console.log(teamId);
+  teamId;
   try {
     await connectToDatabase();
     let events = await EventDay.findOne({

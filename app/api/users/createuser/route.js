@@ -11,8 +11,6 @@ export async function POST(req) {
 
     const reqBody = await req.json();
     const { username, password, isSuperAdmin } = reqBody;
-    console.log(isSuperAdmin);
-    console.log(reqBody);
 
     const token = await getToken({ req });
     const admin = await Admin.findOne({ username: token?.username });
@@ -28,7 +26,7 @@ export async function POST(req) {
         { status: 400 }
       );
     }
-    console.log(reqBody);
+    (reqBody);
     const existingUser = await Admin.findOne({ username });
     if (existingUser) {
       return NextResponse.json(

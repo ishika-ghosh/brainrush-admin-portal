@@ -37,11 +37,10 @@ export async function GET(req) {
   }
 }
 export async function POST(req) {
-  console.log("here");
+  ("here");
   try {
     await connectToDatabase();
     const body = await req.json();
-    console.log(body);
     const event = new EventTimings(body);
     const newEvent = await event.save();
     return NextResponse.json(newEvent);

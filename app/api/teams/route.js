@@ -40,7 +40,7 @@ export async function GET(request) {
     const teamIds = teams.map((team) => team._id);
     const filters = new Object();
     if (filter) filters[filter] = true;
-    console.log(filters);
+    // console.log(filters);
     const newQueries = {
       $and: [{ team: { $in: teamIds } }, filters],
     };
@@ -52,7 +52,7 @@ export async function GET(request) {
         path: "team",
         populate: [{ path: "members" }, { path: "leader" }],
       });
-    console.log(eventsOfAllTeams);
+    // console.log(eventsOfAllTeams);
     return NextResponse.json({
       success: true,
       message: "All Present teams",

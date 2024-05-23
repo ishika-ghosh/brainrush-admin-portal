@@ -22,7 +22,7 @@ export async function PUT(req) {
         lunch: lunchStatus,
       }
     );
-    console.log("updatedData: " + updatedData);
+
     return NextResponse.json({
       success: true,
       updatedData,
@@ -45,12 +45,19 @@ export async function POST(req) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
     const team = await Team.findOne({ team: teamId });
-    if (team?.payment) {
+    const event = await EventDay.findOne({ team: teamId });
+    if (event) {
+      return NextResponse.json({
+        success: false,
+        event,
+      });
+    }
+    if (team?.payment && !event) {
       const eventStarted = await EventDay.create({
         team: teamId,
         attendance: entryStatus,
       });
-      console.log("Start: " + eventStarted);
+
       return NextResponse.json({
         success: true,
         eventStarted,

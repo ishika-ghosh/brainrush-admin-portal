@@ -221,6 +221,9 @@ function TeamDetails({ params }) {
                     );
                     if (eventAttendence?.success) {
                       setAttended(eventStarted);
+                      router.push("/dashboard/teams");
+                    } else {
+                      router.push("/dashboard/teams");
                     }
                     setLoading(false);
                   }}

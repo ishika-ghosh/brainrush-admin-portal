@@ -11,7 +11,7 @@ export async function GET(req) {
     await connectToDatabase();
     const { searchParams } = new URL(req.url);
     const teamId = searchParams.get("teamid");
-    console.log(teamId);
+
     let team = await Team.findOne({
       _id: searchParams.get("teamid"),
     }).populate(["leader", "members"]);
