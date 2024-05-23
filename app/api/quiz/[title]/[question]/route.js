@@ -53,7 +53,8 @@ export async function GET(request, { params }) {
 export async function PUT(request, { params }) {
   try {
     await connectToDatabase();
-    const admin = getDetails(request);
+    const token = await getToken({ req: request });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({
         status: 400,
@@ -62,7 +63,7 @@ export async function PUT(request, { params }) {
     }
     const adminId = admin?.id;
     const adminDetails = await Admin.findById(adminId);
-    // if not a super admin then can not allow then to change the details
+    //if not a super admin then can not allow then to change the details
     if (!adminDetails.isSuperAdmin) {
       return NextResponse.json({
         status: 400,
@@ -83,7 +84,7 @@ export async function PUT(request, { params }) {
     }
 
     const reqBody = await request.json();
-
+    console.log(reqBody);
     Object.assign(question, reqBody);
 
     await question.save();
@@ -103,7 +104,8 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     await connectToDatabase();
-    const admin = getDetails(request);
+    const token = await getToken({ req: request });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({
         status: 400,

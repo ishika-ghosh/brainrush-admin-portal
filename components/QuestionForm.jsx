@@ -2,14 +2,14 @@
 import React, { useState, useEffect } from 'react';
 
 const QuestionForm = ({ initialData, onSubmit, mode }) => {
-    const [qType, setQType] = useState(initialData?.q_type || '');
+    const [qType, setQType] = useState(initialData?.q_type || 'MCQ');
     const [content, setContent] = useState(initialData?.content || '');
-    const [options, setOptions] = useState(initialData?.options || [{ text: '', isCorrect: false }]);
+    const [options, setOptions] = useState(initialData?.options || [{ text: '', isCorrect: false }, { text: '', isCorrect: false }, { text: '', isCorrect: false }, { text: '', isCorrect: false }]);
     const [explanation, setExplanation] = useState(initialData?.explanation || '');
 
     useEffect(() => {
         if (initialData) {
-            setQType(initialData?.q_type || '');
+            setQType(initialData?.q_type || 'MCQ');
             setContent(initialData?.content || '');
             setOptions(initialData?.options || [{ text: '', isCorrect: false }]);
             setExplanation(initialData?.explanation || '');
@@ -75,30 +75,17 @@ const QuestionForm = ({ initialData, onSubmit, mode }) => {
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
                             />
                             <input
-                                type="checkbox"
+                                type="radio"
+                                name="options"
                                 checked={option.isCorrect}
                                 onChange={(e) => handleOptionChange(index, 'isCorrect', e.target.checked)}
                                 className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
                             />
-                            <button
-                                type="button"
-                                onClick={() => handleRemoveOption(index)}
-                                className="text-red-500 hover:text-red-700"
-                            >
-                                Remove
-                            </button>
                         </div>
                     ))}
-                    <button
-                        type="button"
-                        onClick={handleAddOption}
-                        className="mt-2 bg-indigo-500 text-white px-3 py-2 rounded-md"
-                    >
-                        Add Option
-                    </button>
                 </div>
 
-                <div>
+                {/* <div>
                     <label className="block text-sm font-medium text-gray-700">Explanation</label>
                     <textarea
                         value={explanation}
@@ -106,7 +93,7 @@ const QuestionForm = ({ initialData, onSubmit, mode }) => {
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
                         rows="4"
                     ></textarea>
-                </div>
+                </div> */}
 
                 <div>
                     <button

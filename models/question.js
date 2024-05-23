@@ -6,7 +6,10 @@ const questionSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "QuizTitle",
     },
-    q_type: String, // MCQ, MSQ, NAT
+    q_type: {
+      type: String,
+      default: "MCQ",
+    }, // MCQ, MSQ, NAT
     // format: String, // Image, Text
     content: String,
     // assets: String, // any image

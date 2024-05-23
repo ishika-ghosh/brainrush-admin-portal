@@ -95,7 +95,8 @@ export async function DELETE(request, { params }) {
 export async function PUT(request, { params }) {
   try {
     await connectToDatabase();
-    const admin = getDetails(request);
+    const token = await getToken({ req: request });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({
         status: 400,
