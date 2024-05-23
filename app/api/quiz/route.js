@@ -1,13 +1,14 @@
 import Admin from "@models/admin";
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@utils/db";
-import { getDetails } from "@utils/getDetails";
+import { getToken } from "next-auth/jwt";
 import QuizTitle from "@models/quizTitle";
 
 export async function GET(request) {
   try {
     await connectToDatabase();
-    const admin = getDetails(request);
+    const token = await getToken({ req: request });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({
         status: 400,
@@ -55,7 +56,8 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     await connectToDatabase();
-    const admin = getDetails(request);
+    const token = await getToken({ req: request });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({
         status: 400,

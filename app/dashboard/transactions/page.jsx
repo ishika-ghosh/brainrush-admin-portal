@@ -26,6 +26,22 @@ function Transactions() {
     };
     getData();
   }, []);
+  const deleteTransaction = async (id) => {
+    try {
+      const { data } = await axios.delete(`/api/transactions/${id}`);
+      if (data.success) {
+        alert("Data successfully deleted");
+        setTransactions(
+          transactions.filter((transaction) => transaction._id !== id)
+        );
+      } else {
+        alert("Something went wrong, Please try again");
+      }
+    } catch (error) {
+      console.log(error);
+      router.push("/dashboard");
+    }
+  };
   const handleSubmit = async () => {
     console.log(times);
     if (times.startTime > times.endTime) {
@@ -193,6 +209,7 @@ function Transactions() {
                           type="button"
                           data-modal-toggle="delete-user-modal"
                           className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900"
+                          onClick={() => deleteTransaction(transaction._id)}
                         >
                           <svg
                             className="w-4 h-4 mr-2"

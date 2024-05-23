@@ -146,12 +146,7 @@ function Teams() {
                     >
                       Team Leader
                     </th>
-                    <th
-                      scope="col"
-                      className="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"
-                    >
-                      Team Member
-                    </th>
+
                     <th
                       scope="col"
                       className="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"
@@ -172,13 +167,6 @@ function Teams() {
                     >
                       <td className="flex items-center p-4  space-x-6 whitespace-nowrap">
                         <div className="flex -space-x-4">
-                          <Image
-                            className="border-2 border-white rounded-full dark:border-gray-800"
-                            src={team.team.teamMember.image}
-                            width="35"
-                            height="35"
-                            alt=""
-                          />
                           <Image
                             className="border-2 border-white rounded-full dark:border-gray-800"
                             src={team.team.leader.image}
@@ -205,16 +193,7 @@ function Teams() {
                           </div>
                         </div>
                       </td>
-                      <td className="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        <div className="text-sm font-normal text-gray-800 dark:text-gray-400">
-                          <div className="font-medium dark:text-white">
-                            <div>{team.team.teamMember.name}</div>
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                              {team.team.teamMember.email}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
+
                       <td className="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         <div className="text-sm font-normal text-gray-800 dark:text-gray-400">
                           {team.createdAt.split("T")[1].split(".")[0]}
@@ -227,7 +206,7 @@ function Teams() {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center fixed mb-10 left-1/2 bottom-0">
+        <div className="flex flex-col items-center justify-center mb-10 left-1/2 bottom-0">
           <span className="text-sm text-gray-700 dark:text-gray-400">
             Showing{" "}
             <span className="font-semibold text-gray-900 dark:text-white">

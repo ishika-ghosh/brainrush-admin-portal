@@ -1,5 +1,5 @@
 import EventDay from "@models/eventDay";
-import { getDetails } from "@utils/getDetails";
+import { getToken } from "next-auth/jwt";
 import { connectToDatabase } from "@utils/db";
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
@@ -10,7 +10,8 @@ import { sendEmail } from "@controllers/sendEmail";
 export async function GET(req, { params }) {
   try {
     await connectToDatabase();
-    const admin = getDetails(req);
+    const token = await getToken({ req });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
@@ -30,7 +31,7 @@ export async function GET(req, { params }) {
 
     const details = await EventDay.findById(id).populate({
       path: "team",
-      populate: [{ path: "teamMember" }, { path: "leader" }],
+      populate: [{ path: "members" }, { path: "leader" }],
     });
 
     return NextResponse.json(details);
@@ -46,7 +47,8 @@ export async function PUT(req, { params }) {
   try {
     await connectToDatabase();
     //check weather the current admin is a super admin or not
-    const admin = getDetails(req);
+    const token = await getToken({ req });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
@@ -85,7 +87,7 @@ export async function PUT(req, { params }) {
       new: true,
     }).populate({
       path: "team",
-      populate: [{ path: "teamMember" }, { path: "leader" }],
+      populate: [{ path: "members" }, { path: "leader" }],
     });
     let round =
       (body?.first && "First") ||

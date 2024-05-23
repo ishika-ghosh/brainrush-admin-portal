@@ -25,19 +25,23 @@ export async function POST(request) {
         { status: 400 }
       );
     }
-    const tokenData = {
-      id: admin._id,
-      name: admin.username,
-    };
-    const token = jwt.sign(tokenData, process.env.MONGO_SECRET, {
-      expiresIn: "1d",
-    });
+    // const tokenData = {
+    //   id: admin._id,
+    //   name: admin.username,
+    // };
+    // const token = jwt.sign(tokenData, process.env.MONGO_SECRET, {
+    //   expiresIn: "1d",
+    // });
     const response = NextResponse.json({
       message: "login success",
       success: true,
+      user: {
+        username: admin.username,
+        isSuperUser: admin.isSuperAdmin,
+      },
     });
     // localStorage.setItem("token", token);
-    response.cookies.set("token", token);
+    // response.cookies.set("token", token);
 
     return response;
   } catch (error) {

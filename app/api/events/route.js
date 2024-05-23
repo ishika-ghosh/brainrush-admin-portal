@@ -12,7 +12,7 @@ export async function GET() {
     await connectToDatabase();
     const eventsOfAllTeams = await EventDay.find().populate({
       path: "team",
-      populate: [{ path: "teamMember" }, { path: "leader" }],
+      populate: [{ path: "members" }, { path: "leader" }],
     });
     return NextResponse.json({ teams: eventsOfAllTeams });
   } catch (error) {

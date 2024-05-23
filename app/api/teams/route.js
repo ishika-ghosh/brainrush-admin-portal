@@ -6,7 +6,7 @@ import Payment from "@models/payment";
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@utils/db";
 import EventDay from "@models/eventDay";
-import { getDetails } from "@utils/getDetails";
+import { getToken } from "next-auth/jwt";
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -22,7 +22,8 @@ export async function GET(request) {
   const skip = (page - 1) * limit;
   try {
     await connectToDatabase();
-    const admin = getDetails(request);
+    const token = await getToken({ req: request });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
@@ -39,7 +40,7 @@ export async function GET(request) {
     const teamIds = teams.map((team) => team._id);
     const filters = new Object();
     if (filter) filters[filter] = true;
-    console.log(filters);
+    // console.log(filters);
     const newQueries = {
       $and: [{ team: { $in: teamIds } }, filters],
     };
@@ -49,9 +50,9 @@ export async function GET(request) {
       .limit(limit)
       .populate({
         path: "team",
-        populate: [{ path: "teamMember" }, { path: "leader" }],
+        populate: [{ path: "members" }, { path: "leader" }],
       });
-    console.log(eventsOfAllTeams);
+    // console.log(eventsOfAllTeams);
     return NextResponse.json({
       success: true,
       message: "All Present teams",

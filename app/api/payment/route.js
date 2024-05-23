@@ -4,17 +4,17 @@ import Admin from "@models/admin";
 import Payment from "@models/payment";
 import { connectToDatabase } from "@utils/db";
 import { NextResponse } from "next/server";
-import { getDetails } from "@utils/getDetails";
+import { getToken } from "next-auth/jwt";
 import EventDay from "@models/eventDay";
 export async function GET(req) {
   try {
     await connectToDatabase();
     const { searchParams } = new URL(req.url);
     const teamId = searchParams.get("teamid");
-    console.log(teamId);
+
     let team = await Team.findOne({
       _id: searchParams.get("teamid"),
-    }).populate(["leader", "teamMember"]);
+    }).populate(["leader", "members"]);
     return NextResponse.json({
       success: true,
       message: `${team.teamName} Details`,
@@ -32,31 +32,35 @@ export async function PUT(req) {
   try {
     await connectToDatabase();
     const { teamId, paymentStatus } = await req.json();
-    const admin = getDetails(req);
+    const token = await getToken({ req });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
     const teamData = await Team.findById(teamId);
-    if (teamData.teamMemberConfirmation && !teamData.payment) {
-      const updatedData = await Team.updateOne(
-        { team: teamId },
+    if (teamData.members.length === 2 && !teamData.payment) {
+      const updatedData = await Team.findByIdAndUpdate(
+        teamId,
         {
           payment: paymentStatus,
-        }
-      );
-      console.log(updatedData);
+        },
+        { new: true }
+      )
+        .populate("leader")
+        .populate("members");
+
       if (!updatedData) {
         return NextResponse.json(
           { message: "Internal Server Error" },
           { status: 500 }
         );
       }
-      console.log(updatedData);
+
       const addInPayment = await Payment.create({
         team: teamId,
         admin: admin?.id,
       });
-      console.log("updatedData: " + updatedData);
+
       return NextResponse.json({
         success: true,
         updatedData,

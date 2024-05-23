@@ -4,14 +4,15 @@ import Admin from "@models/admin";
 import Payment from "@models/payment";
 import { connectToDatabase } from "@utils/db";
 import { NextResponse } from "next/server";
-import { getDetails } from "@utils/getDetails";
+import { getToken } from "next-auth/jwt";
 import EventDay from "@models/eventDay";
 
 export async function PUT(req) {
   try {
     await connectToDatabase();
     const { teamId, lunchStatus } = await req.json();
-    const admin = getDetails(req);
+    const token = await getToken({ req });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
@@ -21,7 +22,7 @@ export async function PUT(req) {
         lunch: lunchStatus,
       }
     );
-    console.log("updatedData: " + updatedData);
+
     return NextResponse.json({
       success: true,
       updatedData,
@@ -38,17 +39,25 @@ export async function POST(req) {
   try {
     await connectToDatabase();
     const { teamId, entryStatus } = await req.json();
-    const admin = getDetails(req);
+    const token = await getToken({ req });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
     const team = await Team.findOne({ team: teamId });
-    if (team?.payment) {
+    const event = await EventDay.findOne({ team: teamId });
+    if (event) {
+      return NextResponse.json({
+        success: false,
+        event,
+      });
+    }
+    if (team?.payment && !event) {
       const eventStarted = await EventDay.create({
         team: teamId,
         attendance: entryStatus,
       });
-      console.log("Start: " + eventStarted);
+
       return NextResponse.json({
         success: true,
         eventStarted,

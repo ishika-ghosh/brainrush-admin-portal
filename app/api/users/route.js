@@ -1,24 +1,24 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@utils/db";
 import User from "@models/user";
-import { getDetails } from "@utils/getDetails";
 import Admin from "@models/admin";
+import { getToken } from "next-auth/jwt";
 
 export async function GET(request) {
-  const { searchParams } = new URL(request.url);
-  const admin = getDetails(request);
+  await connectToDatabase();
+  const token = await getToken({ req: request });
+  // console.log(token.username);
+  const admin = await Admin.findOne({ username: token?.username });
   if (!admin) {
     return NextResponse.json({ error: "Not valid user", success: false });
   }
-  const adminId = admin?.id;
-  const adminDetails = await Admin.findById(adminId);
-  //if not a super admin then can not allow then to change the details
-  if (!adminDetails.isSuperAdmin) {
+  if (!admin.isSuperAdmin) {
     return NextResponse.json(
-      { message: "Only super admin can change this details" },
+      { message: "Only super admins are allowed" },
       { status: 400 }
     );
   }
+  const { searchParams } = new URL(request.url);
   const search = searchParams.get("search") || "";
   const sort = searchParams.get("sort") || "";
   const page = searchParams.get("page") || 1;
@@ -30,12 +30,11 @@ export async function GET(request) {
         ],
       }
     : {};
-  const limit = 2;
+  const limit = 10;
   const skip = (page - 1) * limit;
-  console.log({ queries });
-  console.log({ sort });
+  // console.log({ queries });
+  // console.log({ sort });
   try {
-    await connectToDatabase();
     const count = await User.find(queries).count();
     const users = await User.find(queries).sort(sort).skip(skip).limit(limit);
     return NextResponse.json({

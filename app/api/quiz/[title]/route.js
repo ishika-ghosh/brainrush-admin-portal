@@ -1,14 +1,15 @@
-import { getDetails } from "@utils/getDetails";
 import { connectToDatabase } from "@utils/db";
 import { NextResponse } from "next/server";
 import Admin from "@models/admin";
 import QuizTitle from "@models/quizTitle";
 import Question from "@models/question";
+import { getToken } from "next-auth/jwt";
 
 export async function GET(request, { params }) {
   try {
     await connectToDatabase();
-    const admin = getDetails(request);
+    const token = await getToken({ req: request });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({
         status: 400,
@@ -49,7 +50,8 @@ export async function GET(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     await connectToDatabase();
-    const admin = getDetails(request);
+    const token = await getToken({ req: request });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({
         status: 400,
@@ -141,7 +143,8 @@ export async function PUT(request, { params }) {
 export async function POST(request, { params }) {
   try {
     await connectToDatabase();
-    const admin = getDetails(request);
+    const token = await getToken({ req: request });
+    const admin = await Admin.findOne({ username: token?.username });
     if (!admin) {
       return NextResponse.json({
         status: 400,

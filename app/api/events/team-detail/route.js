@@ -5,18 +5,17 @@ import Admin from "@models/admin";
 import Payment from "@models/payment";
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@utils/db";
-import { getDetails } from "@utils/getDetails";
 import EventDay from "@models/eventDay";
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const teamId = searchParams.get("teamid");
-  console.log(teamId);
+  teamId;
   try {
     await connectToDatabase();
     let events = await EventDay.findOne({
       team: teamId,
-    }).populate({ path: "team", populate: ["leader", "teamMember"] });
+    }).populate({ path: "team", populate: ["leader", "members"] });
     return NextResponse.json(events);
   } catch (error) {
     console.log(error);
