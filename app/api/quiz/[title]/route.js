@@ -66,9 +66,9 @@ export async function DELETE(request, { params }) {
       });
     }
 
-    const { id } = params;
+    const { title: id } = params;
 
-    const quiz = await Quiz.findById(id);
+    const quiz = await QuizTitle.findById(id);
     if (!quiz) {
       return NextResponse.json({
         status: 404,
@@ -90,57 +90,54 @@ export async function DELETE(request, { params }) {
     });
   }
 }
-// export async function PUT(request, { params }) {
-//   try {
-//     await connectToDatabase();
-//     const admin = getDetails(request);
-//     if (!admin) {
-//       return NextResponse.json({
-//         status: 400,
-//         message: "Not valid user",
-//       });
-//     }
-//     const adminId = admin?.id;
-//     const adminDetails = await Admin.findById(adminId);
-//     //if not a super admin then can not allow then to change the details
-//     if (!adminDetails.isSuperAdmin) {
-//       return NextResponse.json({
-//         status: 400,
-//         message: "Only super admin can change this details",
-//       });
-//     }
+export async function PUT(request, { params }) {
+  try {
+    await connectToDatabase();
+    const admin = getDetails(request);
+    if (!admin) {
+      return NextResponse.json({
+        status: 400,
+        message: "Not valid user",
+      });
+    }
+    const adminId = admin?.id;
+    const adminDetails = await Admin.findById(adminId);
+    //if not a super admin then can not allow then to change the details
+    if (!adminDetails.isSuperAdmin) {
+      return NextResponse.json({
+        status: 400,
+        message: "Only super admin can change this details",
+      });
+    }
 
-//     const { id } = params;
+    const { title: id } = params;
 
-//     const reqBody = await request.json();
-//     const { title, questions } = reqBody;
-//     const quiz = await Quiz.findById(id);
+    const quiz = await QuizTitle.findById(id);
 
-//     if (!quiz) {
-//       return NextResponse.json({
-//         status: 404,
-//         message: "Quiz not found",
-//       });
-//     }
+    if (!quiz) {
+      return NextResponse.json({
+        status: 404,
+        message: "Quiz not found",
+      });
+    }
+    const reqBody = await request.json();
 
-//     quiz.title = title;
-//     quiz.questions = questions;
+    quiz.title = reqBody.title;
 
-//     await quiz.save();
+    await quiz.save();
 
-//     return NextResponse.json({
-//       status: 200,
-//       message: "Quiz updated successfully",
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     return NextResponse.json({
-//       status: 500,
-//       message: "Internal Server Error",
-//     });
-//   }
-// }
-
+    return NextResponse.json({
+      status: 200,
+      message: "Quiz Title updated successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({
+      status: 500,
+      message: "Internal Server Error",
+    });
+  }
+}
 export async function POST(request, { params }) {
   try {
     await connectToDatabase();
