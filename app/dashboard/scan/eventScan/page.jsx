@@ -99,7 +99,6 @@ function Scanner() {
               <div className="flex items-center mb-4">
                 <input
                   type="checkbox"
-                  disabled={eventData?.attendance || !checkTime("Attendance")}
                   defaultChecked={eventData?.attendance}
                   className="w-8 h-8 accent-purple-600 rounded"
                   onChange={() => setEntryStatus((prev) => !prev)}
@@ -117,9 +116,6 @@ function Scanner() {
               <div className="flex items-center mb-4">
                 <input
                   type="checkbox"
-                  disabled={
-                    eventData?.lunch || !checkTime("Lunch") || !eventData?.first
-                  }
                   defaultChecked={eventData?.lunch}
                   className="w-8 h-8 accent-purple-600 rounded"
                   onChange={() => setLunchStatus((prev) => !prev)}
@@ -175,7 +171,6 @@ function Scanner() {
                     <button
                       type="button"
                       className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-                      disabled={!paymentStatus}
                       onClick={() => setDetailsConfirmed(true)}
                     >
                       Verified and Proceed
