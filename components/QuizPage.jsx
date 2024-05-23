@@ -38,7 +38,7 @@ const QuizPage = ({ initialData, onSave, onClose, handleDelete }) => {
               <div className="flex items-center gap-2 justify-between">
                 <div>
                   <h1 className="text-xl font-semibold text-gray-900 sm:text-2xl ">
-                    {question.content}
+                    {question.content.substring(0, 40)}{"..."}
                   </h1>
                   <h3>Type: {question.q_type}</h3>
                 </div>

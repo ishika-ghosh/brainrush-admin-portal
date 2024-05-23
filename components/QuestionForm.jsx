@@ -22,15 +22,6 @@ const QuestionForm = ({ initialData, onSubmit, mode }) => {
         setOptions(newOptions);
     };
 
-    const handleAddOption = () => {
-        setOptions([...options, { text: '', isCorrect: false }]);
-    };
-
-    const handleRemoveOption = (index) => {
-        const newOptions = options.filter((_, i) => i !== index);
-        setOptions(newOptions);
-    };
-
     const handleSubmit = (e) => {
         e.preventDefault();
         const questionData = { q_type: qType, content, options, explanation };
@@ -49,8 +40,6 @@ const QuestionForm = ({ initialData, onSubmit, mode }) => {
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
                     >
                         <option value="MCQ">MCQ</option>
-                        <option value="MSQ">MSQ</option>
-                        <option value="NAT">NAT</option>
                     </select>
                 </div>
 
