@@ -18,7 +18,7 @@ export async function GET(request) {
         $or: [{ teamName: { $regex: search, $options: "i" } }],
       }
     : {};
-  const limit = 2;
+  const limit = 10;
   const skip = (page - 1) * limit;
   try {
     await connectToDatabase();
