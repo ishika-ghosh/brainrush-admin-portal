@@ -5,6 +5,7 @@ import User from "@models/user";
 import Payment from "@models/payment";
 import EventDay from "@models/eventDay";
 import Admin from "@models/admin";
+import Quiz from "@models/quiz";
 import { getToken } from "next-auth/jwt";
 
 export const dynamic = "force-dynamic";
@@ -33,6 +34,7 @@ export async function GET(req) {
       },
     });
     const teamsAttended = await EventDay.count({});
+
     return NextResponse.json({
       teams: teams,
       users: users,
@@ -48,5 +50,48 @@ export async function GET(req) {
       { message: "Internal Server Error" },
       { status: 500 }
     );
+  }
+}
+export async function POST(req) {
+  try {
+    await connectToDatabase();
+    const token = await getToken({ req });
+    const admin = await Admin.findOne({ username: token?.username }).select(
+      "-password"
+    );
+    if (!admin) {
+      return NextResponse.json({ error: "Not valid user", success: false });
+    }
+
+    const quizDetails = await Quiz.find({
+      quizEnded: true,
+    })
+      .populate({
+        path: "team",
+        populate: ["leader", "members"],
+      })
+      .select(["team"]);
+
+    var dataSummary = [];
+    quizDetails.forEach((quiz) => {
+      var team = {
+        teamName: quiz.team.teamName,
+        leaderName: quiz.team.leader.name,
+        leaderEmail: quiz.team.leader.email,
+        member1Name: quiz.team.members[0].name,
+        member1Email: quiz.team.members[0].email,
+        member2Name: quiz.team.members[1].name,
+        member2Email: quiz.team.members[1].email,
+      };
+      dataSummary.push(team);
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: "data fetched successfully",
+      results: dataSummary,
+    });
+  } catch (error) {
+    console.log(error);
   }
 }

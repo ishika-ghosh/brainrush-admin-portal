@@ -98,8 +98,8 @@ export async function PUT(req, { params }) {
       team: newEvent.team.teamName,
       round: round,
     };
-    const { success } = sendEmail(newEvent?.team?.leader?.email, messageData);
-    return NextResponse.json({ updatedEvent: newEvent, success: success });
+
+    return NextResponse.json({ updatedEvent: newEvent, success: true });
   } catch (error) {
     console.log(error);
     return NextResponse.json(

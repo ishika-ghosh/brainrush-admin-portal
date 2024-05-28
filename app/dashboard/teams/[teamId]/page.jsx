@@ -56,10 +56,8 @@ function TeamDetails({ params }) {
         router.push("/404");
       }
       setDetails(data?.updatedEvent);
-      if (!data?.success) {
-        alert(
-          "Due to some technical fault mail not send Kindly inform the team Some how"
-        );
+      if (data?.success) {
+        alert("Team deatails updated successfully");
       }
       handleCancel();
     } catch (error) {
@@ -201,10 +199,10 @@ function TeamDetails({ params }) {
             <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
               <QualifierInput
                 qualified={details?.second}
-                isDisabled={!checkTime(timings, "2nd Round")}
+                isDisabled={!checkTime(timings, "Second Round")}
                 isChecked={checkbox[1]}
                 handleChange={() =>
-                  handleChange(1, { second: !details?.second }, "2nd Round")
+                  handleChange(1, { second: !details?.second }, "Second Round")
                 }
                 cardTitle={"Second Round"}
               />
@@ -212,10 +210,10 @@ function TeamDetails({ params }) {
             <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
               <QualifierInput
                 qualified={details?.third}
-                isDisabled={!checkTime(timings, "3rd Round")}
+                isDisabled={!checkTime(timings, "Third Round")}
                 isChecked={checkbox[2]}
                 handleChange={() =>
-                  handleChange(2, { third: !details?.third }, "3rd Round")
+                  handleChange(2, { third: !details?.third }, "Third Round")
                 }
                 cardTitle={"Final Round"}
               />
