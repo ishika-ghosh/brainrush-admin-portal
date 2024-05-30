@@ -75,6 +75,7 @@ export async function POST(req) {
     var dataSummary = [];
     quizDetails.forEach((quiz) => {
       var team = {
+        teamId: quiz.team._id,
         teamName: quiz.team.teamName,
         leaderName: quiz.team.leader.name,
         leaderEmail: quiz.team.leader.email,
