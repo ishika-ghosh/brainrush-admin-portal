@@ -62,31 +62,49 @@ export async function POST(req) {
     if (!admin) {
       return NextResponse.json({ error: "Not valid user", success: false });
     }
-
-    const quizDetails = await Quiz.find({
-      quizEnded: true,
-    })
-      .populate({
-        path: "team",
-        populate: ["leader", "members"],
-      })
-      .select(["team"]);
-
+    const { all } = await req.json();
     var dataSummary = [];
-    quizDetails.forEach((quiz) => {
-      var team = {
-        teamId: quiz.team._id,
-        teamName: quiz.team.teamName,
-        leaderName: quiz.team.leader.name,
-        leaderEmail: quiz.team.leader.email,
-        member1Name: quiz.team.members[0].name,
-        member1Email: quiz.team.members[0].email,
-        member2Name: quiz.team.members[1].name,
-        member2Email: quiz.team.members[1].email,
-      };
-      dataSummary.push(team);
-    });
+    if (all) {
+      const teams = await Team.find({ payment: true })
+        .populate("leader")
+        .populate("members");
+      teams.forEach((team) => {
+        var teamDetails = {
+          teamId: team._id,
+          teamName: team.teamName,
+          leaderName: team.leader.name,
+          leaderEmail: team.leader.email,
+          member1Name: team.members[0].name,
+          member1Email: team.members[0].email,
+          member2Name: team.members[1].name,
+          member2Email: team.members[1].email,
+        };
+        dataSummary.push(teamDetails);
+      });
+    } else {
+      const quizDetails = await Quiz.find({
+        quizEnded: true,
+      })
+        .populate({
+          path: "team",
+          populate: ["leader", "members"],
+        })
+        .select(["team"]);
 
+      quizDetails.forEach((quiz) => {
+        var team = {
+          teamId: quiz.team._id,
+          teamName: quiz.team.teamName,
+          leaderName: quiz.team.leader.name,
+          leaderEmail: quiz.team.leader.email,
+          member1Name: quiz.team.members[0].name,
+          member1Email: quiz.team.members[0].email,
+          member2Name: quiz.team.members[1].name,
+          member2Email: quiz.team.members[1].email,
+        };
+        dataSummary.push(team);
+      });
+    }
     return NextResponse.json({
       success: true,
       message: "data fetched successfully",
